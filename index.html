@@ -1,0 +1,1283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flipkart Clone</title>
+    
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons for UI icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        /* Custom styles to enhance Tailwind */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f1f2f6;
+        }
+        
+        /* Hide scrollbar but allow scrolling */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none; /* IE and Edge */
+            scrollbar-width: none; /* Firefox */
+        }
+        
+        /* Modal styles */
+        .modal-overlay {
+            transition: opacity 0.3s ease;
+        }
+        .modal-container {
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <!-- Header Section -->
+    <header class="bg-white shadow-md sticky top-0 z-40">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo and Search Section -->
+                <div class="flex items-center space-x-8 flex-1">
+                    <!-- Logo -->
+                    <div class="flex-shrink-0">
+                        <a href="#" id="logoLink" class="flex flex-col items-center">
+                            <img class="h-7" src="https://static-assets-web.flixcart.com/fk-p-linchpin-web/fk-cp-zion/img/flipkart-plus_8d85f4.png" alt="Flipkart">
+                            <span class="text-xs text-gray-500 italic -mt-1">
+                                Explore <span class="text-yellow-500 font-semibold">Plus</span>
+                                <img class="h-2 inline-block" src="https://static-assets-web.flixcart.com/fk-p-linchpin-web/fk-cp-zion/img/plus_aef861.png" alt="+">
+                            </span>
+                        </a>
+                    </div>
+                    <!-- Search Bar -->
+                    <div class="hidden sm:flex relative flex-grow max-w-xl">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i data-lucide="search" class="h-5 w-5 text-gray-400"></i>
+                        </div>
+                        <input type="text" id="searchInput" placeholder="Search for Products, Brands and More" class="w-full bg-gray-100 border-none rounded-lg py-2 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                         <div id="searchResults" class="hidden absolute top-full mt-1 left-0 right-0 bg-white shadow-lg rounded-b-lg z-50 max-h-96 overflow-y-auto"></div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons Section -->
+                <div id="action-buttons" class="flex items-center space-x-4 md:space-x-8">
+                     <a href="#" id="servicesLinkHeader" class="text-gray-700 font-medium hover:text-blue-500 flex items-center space-x-2">
+                         <i data-lucide="concierge-bell" class="h-5 w-5"></i>
+                        <span class="hidden md:inline">Services</span>
+                    </a>
+                     <a href="#" id="schemeLinkHeader" class="text-gray-700 font-medium hover:text-blue-500 flex items-center space-x-2">
+                         <i data-lucide="tag" class="h-5 w-5"></i>
+                        <span class="hidden md:inline">Scheme</span>
+                    </a>
+                     <div id="login-container">
+                        <button id="loginBtn" class="bg-blue-500 text-white font-semibold px-8 py-2 rounded-lg hover:bg-blue-600 transition-colors">Login</button>
+                    </div>
+                     <div id="user-container" class="hidden relative">
+                        <button id="userBtn" class="text-gray-700 font-medium hover:text-blue-500 flex items-center space-x-1">
+                             <i data-lucide="user-circle-2" class="h-5 w-5"></i>
+                             <span id="username" class="font-semibold"></span>
+                             <i data-lucide="chevron-down" class="h-4 w-4"></i>
+                        </button>
+                        <div id="userDropdown" class="hidden absolute right-0 mt-2 w-60 bg-white rounded-md shadow-lg py-1 z-50">
+                            <a href="#" id="profileLink" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"><i data-lucide="user" class="h-4 w-4 mr-3"></i> My Profile</a>
+                            <a href="#" id="ordersLink" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"><i data-lucide="package" class="h-4 w-4 mr-3"></i> Orders</a>
+                            <a href="#" id="wishlistLink" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"><i data-lucide="heart" class="h-4 w-4 mr-3"></i> Wishlist</a>
+                            <a href="#" id="logoutBtn" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"><i data-lucide="log-out" class="h-4 w-4 mr-3"></i> Logout</a>
+                        </div>
+                    </div>
+                    <button class="md:hidden">
+                        <i data-lucide="menu" class="h-6 w-6 text-gray-700"></i>
+                    </button>
+                </div>
+            </div>
+             <!-- Search Bar for mobile -->
+            <div class="sm:hidden pb-4 px-2">
+                <div class="relative">
+                    <input type="text" id="searchInputMobile" placeholder="Search for Products, Brands and More" class="w-full bg-gray-100 border-none rounded-lg py-2 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i data-lucide="search" class="h-5 w-5 text-gray-400"></i>
+                    </div>
+                    <div id="searchResultsMobile" class="hidden absolute top-full mt-1 left-0 right-0 bg-white shadow-lg rounded-b-lg z-50 max-h-96 overflow-y-auto"></div>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Main Content Area -->
+    <main class="container mx-auto p-4">
+        <!-- Home View -->
+        <div id="homeView">
+            <!-- Hero Banner/Carousel -->
+            <div class="bg-white rounded-lg shadow-sm overflow-hidden mb-6">
+                <div class="relative h-48 md:h-72">
+                    <!-- Slides -->
+                    <div class="carousel-slide absolute w-full h-full transition-opacity duration-700 ease-in-out">
+                        <img src="images/diwali-sale.jpeg" alt="diwali-sale" class="w-full h-full object-cover">
+                    </div>
+                    <div class="carousel-slide absolute w-full h-full transition-opacity duration-700 ease-in-out opacity-0">
+                         <img src="images/offer.jpeg" alt="offer" class="w-full h-full object-cover">
+                    </div>
+                    <div class="carousel-slide absolute w-full h-full transition-opacity duration-700 ease-in-out opacity-0">
+                         <img src="images/offerX.jpeg" alt="offerX" class="w-full h-full object-cover">
+                    </div>
+
+                    <!-- Navigation Buttons -->
+                    <button id="prevBtn" class="absolute top-1/2 left-2 transform -translate-y-1/2 bg-white/80 rounded-full p-2 hover:bg-white transition">
+                        <i data-lucide="chevron-left" class="h-6 w-6 text-gray-700"></i>
+                    </button>
+                    <button id="nextBtn" class="absolute top-1/2 right-2 transform -translate-y-1/2 bg-white/80 rounded-full p-2 hover:bg-white transition">
+                        <i data-lucide="chevron-right" class="h-6 w-6 text-gray-700"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Category Grid -->
+            <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
+                <div id="category-grid-container" class="grid grid-cols-4 gap-y-4 gap-x-2 text-center">
+                    <!-- Categories will be dynamically inserted here by JavaScript -->
+                </div>
+            </div>
+            
+            <!-- Dhamaka Deals -->
+            <div class="mb-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">Dhamaka Deals</h2>
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    <a href="#" class="block bg-white rounded-lg shadow-sm overflow-hidden group">
+                        <div class="p-4 bg-orange-50 rounded-t-lg">
+                             <img src="images/kurtiPlazo.jpeg" class="w-full h-40 object-contain group-hover:scale-105 transition-transform duration-300">
+                        </div>
+                        <div class="p-3 text-center">
+                            <h3 class="font-semibold text-sm text-gray-800">Kurta Palazzos</h3>
+                            <p class="text-green-600 font-medium">Under ₹699</p>
+                        </div>
+                    </a>
+                     <a href="#" class="block bg-white rounded-lg shadow-sm overflow-hidden group">
+                        <div class="p-4 bg-orange-50 rounded-t-lg">
+                             <img src="images/dresses.jpeg" class="w-full h-40 object-contain group-hover:scale-105 transition-transform duration-300">
+                        </div>
+                        <div class="p-3 text-center">
+                            <h3 class="font-semibold text-sm text-gray-800">Dresses</h3>
+                            <p class="text-green-600 font-medium">Under ₹399</p>
+                        </div>
+                    </a>
+                     <a href="#" class="block bg-white rounded-lg shadow-sm overflow-hidden group">
+                        <div class="p-4 bg-orange-50 rounded-t-lg">
+                             <img src="images/totebag.jpeg" class="w-full h-40 object-contain group-hover:scale-105 transition-transform duration-300">
+                        </div>
+                        <div class="p-3 text-center">
+                            <h3 class="font-semibold text-sm text-gray-800">Tote bag</h3>
+                            <p class="text-green-600 font-medium">Under ₹299</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Jackpot Deals -->
+            <div class="bg-gradient-to-b from-yellow-50 to-orange-100 rounded-lg shadow-sm p-4 mb-6 relative overflow-hidden">
+                 <!--<img src="https://rukminim1.flixcart.com/fk-p-flap/200/200/image/9e676862372c608f.jpg?q=90" class="absolute top-0 right-0 h-16 w-16 opacity-50"> -->
+                 <h2 class="text-2xl font-bold text-gray-800 mb-4">Jackpot Deals</h2>
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    <a href="#" class="block bg-white rounded-lg shadow-sm overflow-hidden group">
+                        <div class="p-4 rounded-t-lg">
+                             <img src="images/embroidered.jpeg" class="w-full h-40 object-contain group-hover:scale-105 transition-transform duration-300">
+                        </div>
+                        <div class="p-3 text-center">
+                            <h3 class="font-semibold text-sm text-gray-800">Embroidered...</h3>
+                            <p class="text-red-500 font-medium">Min. 70% Off</p>
+                        </div>
+                    </a>
+                     <a href="#" class="block bg-white rounded-lg shadow-sm overflow-hidden group">
+                        <div class="p-4 rounded-t-lg">
+                             <img src="images/jeans.jpeg" class="w-full h-40 object-contain group-hover:scale-105 transition-transform duration-300">
+                        </div>
+                        <div class="p-3 text-center">
+                            <h3 class="font-semibold text-sm text-gray-800">Jeans, trousers...</h3>
+                            <p class="text-red-500 font-medium">Under ₹449</p>
+                        </div>
+                    </a>
+                     <a href="#" class="block bg-white rounded-lg shadow-sm overflow-hidden group">
+                        <div class="p-4 rounded-t-lg">
+                             <img src="images/kurti.jpeg" class="w-full h-40 object-contain group-hover:scale-105 transition-transform duration-300">
+                        </div>
+                        <div class="p-3 text-center">
+                            <h3 class="font-semibold text-sm text-gray-800">Short kurtis</h3>
+                            <p class="text-red-500 font-medium">Under ₹249</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Scheme View -->
+        <div id="schemeView" class="hidden">
+             <button class="backToHomeBtn flex items-center text-blue-500 font-semibold mb-4"><i data-lucide="arrow-left" class="h-5 w-5 mr-2"></i> Back to Home</button>
+            <div class="bg-gray-800 text-white rounded-lg shadow-sm p-8">
+                <h2 class="text-3xl font-bold text-center mb-2">Our Exclusive Schemes</h2>
+                <p class="text-center text-gray-400 mb-8">Discover special offers and rewards just for you.</p>
+                <div class="space-y-6">
+                    <a href="#" class="block hover:opacity-90 transition-opacity group">
+                        <div class="bg-blue-500 rounded-lg p-6 flex flex-col items-center text-center">
+                            <div class="bg-white p-3 rounded-full mb-4 group-hover:scale-110 transition-transform duration-300">
+                                <i data-lucide="gift" class="h-8 w-8 text-blue-500"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold mb-2">Welcome Bonus</h3>
+                            <p class="text-blue-100">Get exclusive discounts on your first purchase with us.</p>
+                        </div>
+                    </a>
+                     <a href="#" class="block hover:opacity-90 transition-opacity group">
+                        <div class="bg-yellow-500 rounded-lg p-6 flex flex-col items-center text-center">
+                            <div class="bg-white p-3 rounded-full mb-4 group-hover:scale-110 transition-transform duration-300">
+                                <i data-lucide="percent" class="h-8 w-8 text-yellow-500"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold mb-2">Seasonal Sale</h3>
+                            <p class="text-yellow-100">Up to 50% off on selected categories. Limited time offer!</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Services View -->
+        <div id="servicesView" class="hidden">
+             <button class="backToHomeBtn flex items-center text-blue-500 font-semibold mb-4"><i data-lucide="arrow-left" class="h-5 w-5 mr-2"></i> Back to Home</button>
+            <div class="bg-gray-800 text-white rounded-lg shadow-sm p-8">
+                <h2 class="text-3xl font-bold text-center mb-2">Our Services</h2>
+                <p class="text-center text-gray-400 mb-8">We are committed to providing you with the best experience.</p>
+                <div class="space-y-6">
+                    <a href="#" class="block hover:opacity-90 transition-opacity group">
+                        <div class="bg-gray-700 rounded-lg p-6 flex flex-col items-center text-center">
+                            <div class="bg-blue-500 p-3 rounded-full mb-4 group-hover:scale-110 transition-transform duration-300">
+                                <i data-lucide="truck" class="h-8 w-8 text-white"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold mb-2">Express Delivery</h3>
+                            <p class="text-gray-400">Get your products delivered to your doorstep in the shortest time possible.</p>
+                        </div>
+                    </a>
+                     <a href="#" class="block hover:opacity-90 transition-opacity group">
+                        <div class="bg-gray-700 rounded-lg p-6 flex flex-col items-center text-center">
+                            <div class="bg-green-500 p-3 rounded-full mb-4 group-hover:scale-110 transition-transform duration-300">
+                                <i data-lucide="shield-check" class="h-8 w-8 text-white"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold mb-2">Secure Payments</h3>
+                            <p class="text-gray-400">We ensure that your payment information is safe and secure.</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Fashion View -->
+        <div id="fashionView" class="hidden space-y-6">
+             <button class="backToHomeBtn flex items-center text-blue-500 font-semibold"><i data-lucide="arrow-left" class="h-5 w-5 mr-2"></i> Back to Home</button>
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <h2 class="text-3xl font-bold text-gray-800 mb-6 border-b pb-4">Fashion</h2>
+                <div id="fashionSubCategoryGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+                    <!-- Dynamically generated content will go here -->
+                </div>
+            </div>
+        </div>
+
+         <!-- Electronics View -->
+        <div id="electronicsView" class="hidden space-y-6">
+             <button class="backToHomeBtn flex items-center text-blue-500 font-semibold"><i data-lucide="arrow-left" class="h-5 w-5 mr-2"></i> Back to Home</button>
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <h2 class="text-3xl font-bold text-gray-800 mb-6 border-b pb-4">Electronics</h2>
+                <div id="electronicsSubCategoryGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+                    <!-- Dynamically generated content will go here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Home & Living View -->
+        <div id="homeLivingView" class="hidden space-y-6">
+             <button class="backToHomeBtn flex items-center text-blue-500 font-semibold"><i data-lucide="arrow-left" class="h-5 w-5 mr-2"></i> Back to Home</button>
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <h2 class="text-3xl font-bold text-gray-800 mb-6 border-b pb-4">Home & Living</h2>
+                <div id="homeLivingSubCategoryGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+                    <!-- Dynamically generated content will go here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Beauty View -->
+        <div id="beautyView" class="hidden space-y-6">
+             <button class="backToHomeBtn flex items-center text-blue-500 font-semibold"><i data-lucide="arrow-left" class="h-5 w-5 mr-2"></i> Back to Home</button>
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <h2 class="text-3xl font-bold text-gray-800 mb-6 border-b pb-4">Beauty</h2>
+                <div id="beautySubCategoryGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+                    <!-- Dynamically generated content will go here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Health & Fitness View -->
+        <div id="healthFitnessView" class="hidden space-y-6">
+             <button class="backToHomeBtn flex items-center text-blue-500 font-semibold"><i data-lucide="arrow-left" class="h-5 w-5 mr-2"></i> Back to Home</button>
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <h2 class="text-3xl font-bold text-gray-800 mb-6 border-b pb-4">Health & Fitness</h2>
+                <div id="healthFitnessSubCategoryGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+                    <!-- Dynamically generated content will go here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Sports & Outdoors View -->
+        <div id="sportsOutdoorsView" class="hidden space-y-6">
+             <button class="backToHomeBtn flex items-center text-blue-500 font-semibold"><i data-lucide="arrow-left" class="h-5 w-5 mr-2"></i> Back to Home</button>
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <h2 class="text-3xl font-bold text-gray-800 mb-6 border-b pb-4">Sports & Outdoors</h2>
+                <div id="sportsOutdoorsSubCategoryGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+                    <!-- Dynamically generated content will go here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Toys & Baby Products View -->
+        <div id="toysBabyProductsView" class="hidden space-y-6">
+             <button class="backToHomeBtn flex items-center text-blue-500 font-semibold"><i data-lucide="arrow-left" class="h-5 w-5 mr-2"></i> Back to Home</button>
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <h2 class="text-3xl font-bold text-gray-800 mb-6 border-b pb-4">Toys & Baby Products</h2>
+                <div id="toysBabyProductsSubCategoryGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+                    <!-- Dynamically generated content will go here -->
+                </div>
+            </div>
+        </div>
+
+         <!-- Automotive View -->
+        <div id="automotiveView" class="hidden space-y-6">
+             <button class="backToHomeBtn flex items-center text-blue-500 font-semibold"><i data-lucide="arrow-left" class="h-5 w-5 mr-2"></i> Back to Home</button>
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <h2 class="text-3xl font-bold text-gray-800 mb-6 border-b pb-4">Automotive</h2>
+                <div id="automotiveSubCategoryGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+                    <!-- Dynamically generated content will go here -->
+                </div>
+            </div>
+        </div>
+        
+         <!-- Books, Media & Stationery View -->
+        <div id="booksMediaStationeryView" class="hidden space-y-6">
+             <button class="backToHomeBtn flex items-center text-blue-500 font-semibold"><i data-lucide="arrow-left" class="h-5 w-5 mr-2"></i> Back to Home</button>
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <h2 class="text-3xl font-bold text-gray-800 mb-6 border-b pb-4">Books, Media & Stationery</h2>
+                <div id="booksMediaStationerySubCategoryGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+                    <!-- Dynamically generated content will go here -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- Food & Beverages View -->
+        <div id="foodBeveragesView" class="hidden space-y-6">
+             <button class="backToHomeBtn flex items-center text-blue-500 font-semibold"><i data-lucide="arrow-left" class="h-5 w-5 mr-2"></i> Back to Home</button>
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <h2 class="text-3xl font-bold text-gray-800 mb-6 border-b pb-4">Food & Beverages</h2>
+                <div id="foodBeveragesSubCategoryGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+                    <!-- Dynamically generated content will go here -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- Beverages View -->
+        <div id="beveragesView" class="hidden space-y-6">
+             <button class="backToHomeBtn flex items-center text-blue-500 font-semibold"><i data-lucide="arrow-left" class="h-5 w-5 mr-2"></i> Back to Home</button>
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <h2 class="text-3xl font-bold text-gray-800 mb-6 border-b pb-4">Beverages</h2>
+                <div id="beveragesSubCategoryGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+                    <!-- Dynamically generated content will go here -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- Travel & Luggage View -->
+        <div id="travelLuggageView" class="hidden space-y-6">
+             <button class="backToHomeBtn flex items-center text-blue-500 font-semibold"><i data-lucide="arrow-left" class="h-5 w-5 mr-2"></i> Back to Home</button>
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <h2 class="text-3xl font-bold text-gray-800 mb-6 border-b pb-4">Travel & Luggage</h2>
+                <div id="travelLuggageSubCategoryGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+                    <!-- Dynamically generated content will go here -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- Pets View -->
+        <div id="petsView" class="hidden space-y-6">
+             <button class="backToHomeBtn flex items-center text-blue-500 font-semibold"><i data-lucide="arrow-left" class="h-5 w-5 mr-2"></i> Back to Home</button>
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <h2 class="text-3xl font-bold text-gray-800 mb-6 border-b pb-4">Pets</h2>
+                <div id="petsSubCategoryGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+                    <!-- Dynamically generated content will go here -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- Gifts & Occasions View -->
+        <div id="giftsOccasionsView" class="hidden space-y-6">
+             <button class="backToHomeBtn flex items-center text-blue-500 font-semibold"><i data-lucide="arrow-left" class="h-5 w-5 mr-2"></i> Back to Home</button>
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <h2 class="text-3xl font-bold text-gray-800 mb-6 border-b pb-4">Gifts & Occasions</h2>
+                <div id="giftsOccasionsSubCategoryGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+                    <!-- Dynamically generated content will go here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Generic Category View -->
+        <div id="categoryView" class="hidden">
+             <button class="backToHomeBtn flex items-center text-blue-500 font-semibold mb-6"><i data-lucide="arrow-left" class="h-5 w-5 mr-2"></i> Back to Home</button>
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <h2 id="categoryPageTitle" class="text-3xl font-bold text-gray-800 mb-6 border-b pb-4">Category Title</h2>
+                <div id="subCategoryGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+                    <!-- Sub-categories will be dynamically inserted here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile View -->
+        <div id="profileView" class="hidden">
+             <button class="backToHomeBtn flex items-center text-blue-500 font-semibold mb-4"><i data-lucide="arrow-left" class="h-5 w-5 mr-2"></i> Back to Home</button>
+            <div class="bg-white rounded-lg shadow-sm">
+                <div class="bg-blue-600 p-6 rounded-t-lg">
+                    <div class="flex items-center justify-center space-x-6">
+                        <button id="maleIconBtn" class="relative group">
+                             <img src="images/male.jpeg" alt="male" class="w-20 h-20 p-1 bg-white rounded-full">
+                             <div id="maleCheck" class="hidden absolute bottom-0 right-0 bg-green-500 rounded-full p-1">
+                                <i data-lucide="check" class="w-4 h-4 text-white"></i>
+                            </div>
+                        </button>
+                        <span class="text-white text-2xl font-light">or</span>
+                        <button id="femaleIconBtn" class="relative group">
+                           <img src="images/female.jpeg" alt="female" class="w-20 h-20 p-1 bg-white rounded-full">
+                             <div id="femaleCheck" class="hidden absolute bottom-0 right-0 bg-green-500 rounded-full p-1">
+                                <i data-lucide="check" class="w-4 h-4 text-white"></i>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+                <div class="p-8">
+                    <form id="profileForm">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                            <div>
+                                <label for="firstNameInput" class="text-sm font-medium text-gray-500">First Name</label>
+                                <input type="text" id="firstNameInput" class="w-full border-b-2 border-gray-300 focus:border-blue-500 py-2 outline-none mt-1">
+                            </div>
+                             <div>
+                                <label for="lastNameInput" class="text-sm font-medium text-gray-500">Last Name</label>
+                                <input type="text" id="lastNameInput" class="w-full border-b-2 border-gray-300 focus:border-blue-500 py-2 outline-none mt-1">
+                            </div>
+                        </div>
+                        <div class="text-center mb-8">
+                            <button type="submit" class="bg-blue-600 text-white font-semibold py-3 px-12 rounded-lg hover:bg-blue-700 transition-colors">SUBMIT</button>
+                        </div>
+                    </form>
+                    <div class="space-y-6">
+                        <!-- Mobile Number Section -->
+                        <div id="mobileSection">
+                            <!-- Display View -->
+                            <div id="mobileDisplay" class="flex justify-between items-center">
+                                <div>
+                                    <p class="text-sm font-medium text-gray-500">Mobile Number</p>
+                                    <p id="profileMobile" class="font-medium text-gray-800">+91 XXXXX XXXXX</p>
+                                </div>
+                                <button id="updateMobileBtn" class="text-blue-600 font-semibold text-sm">Update</button>
+                            </div>
+                            <!-- Edit View (hidden by default) -->
+                            <div id="mobileEdit" class="hidden">
+                                <label for="mobileInput" class="text-sm font-medium text-gray-500">Enter New Mobile Number</label>
+                                <div class="flex items-center space-x-2 sm:space-x-4 mt-1">
+                                    <input type="tel" id="mobileInput" placeholder="+91 XXXXXXXXXX" class="w-full border-b-2 border-gray-300 focus:border-blue-500 py-2 outline-none">
+                                    <button id="saveMobileBtn" class="bg-blue-600 text-white font-semibold py-2 px-4 sm:px-6 rounded-lg hover:bg-blue-700 text-sm">Save</button>
+                                    <button id="cancelMobileBtn" class="text-gray-500 font-semibold text-sm">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                         <div class="flex justify-between items-center">
+                            <div>
+                                <p class="text-sm font-medium text-gray-500">Email ID</p>
+                                <p id="profileEmail" class="font-medium text-gray-800">your-email@example.com</p>
+                            </div>
+                            <a href="#" class="text-blue-600 font-semibold text-sm">Verify</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Orders View -->
+        <div id="ordersView" class="hidden bg-white rounded-lg shadow-sm p-8 min-h-[60vh]">
+            <button class="backToHomeBtn flex items-center text-blue-500 font-semibold mb-6"><i data-lucide="arrow-left" class="h-5 w-5 mr-2"></i> Back to Home</button>
+            <h2 class="text-3xl font-bold text-gray-800 mb-4">My Orders</h2>
+            <div class="text-center py-16 border-t">
+                 <img src="https://rukminim1.flixcart.com/www/800/800/promos/16/05/2019/d438a32e-765a-4d8b-b4a6-520b560971e8.png?q=90" alt="No orders" class="mx-auto h-40 mb-4">
+                 <p class="text-gray-600 text-lg font-semibold">You have no orders yet.</p>
+                 <p class="text-gray-500 text-sm">Looks like you haven't made your choice yet.</p>
+                 <button class="backToHomeBtn mt-6 bg-blue-500 text-white font-semibold px-8 py-3 rounded-lg hover:bg-blue-600 transition-colors">Start Shopping</button>
+            </div>
+        </div>
+
+        <!-- Wishlist View -->
+        <div id="wishlistView" class="hidden bg-white rounded-lg shadow-sm p-8 min-h-[60vh]">
+            <button class="backToHomeBtn flex items-center text-blue-500 font-semibold mb-6"><i data-lucide="arrow-left" class="h-5 w-5 mr-2"></i> Back to Home</button>
+            <h2 class="text-3xl font-bold text-gray-800 mb-4">My Wishlist</h2>
+             <div class="text-center py-16 border-t">
+                 <img src="https://rukminim1.flixcart.com/www/800/800/promos/16/05/2019/d438a32e-765a-4d8b-b4a6-520b560971e8.png?q=90" alt="Empty wishlist" class="mx-auto h-40 mb-4">
+                 <p class="text-gray-600 text-lg font-semibold">Your wishlist is empty.</p>
+                 <p class="text-gray-500 text-sm">Save items that you like in your wishlist. Review them anytime and make them yours.</p>
+                 <button class="backToHomeBtn mt-6 bg-blue-500 text-white font-semibold px-8 py-3 rounded-lg hover:bg-blue-600 transition-colors">Explore Products</button>
+            </div>
+        </div>
+    </main>
+
+
+    <!-- Footer Section -->
+    <footer class="bg-gray-800 text-white pt-10 pb-4">
+        <!-- Footer content... -->
+    </footer>
+
+    <!-- Auth Modals -->
+    <div id="authModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 modal-overlay opacity-0 pointer-events-none">
+        <!-- Login View -->
+        <div id="loginView" class="bg-white w-full max-w-md m-4 rounded-lg shadow-lg modal-container transform scale-95 opacity-0">
+             <div class="flex">
+                <div class="hidden sm:flex w-2/5 bg-blue-600 p-8 rounded-l-lg text-white flex-col justify-between">
+                    <div>
+                        <h2 class="text-2xl font-semibold">Login</h2>
+                        <p class="text-sm mt-2">Get access to your Orders, Wishlist and Recommendations</p>
+                    </div>
+                    <img src="https://static-assets-web.flixcart.com/fk-p-linchpin-web/fk-cp-zion/img/login_img_c4a81e.png" alt="Login Graphic" class="w-32 h-32 mx-auto">
+                </div>
+                <div class="w-full sm:w-3/5 p-8 relative">
+                    <button class="closeModalBtn absolute top-4 right-4 text-gray-400 hover:text-gray-800">
+                        <i data-lucide="x" class="h-6 w-6"></i>
+                    </button>
+                    <div class="flex flex-col h-full">
+                        <input id="loginEmail" type="text" placeholder="Enter Email/Mobile number" class="w-full border-b-2 border-gray-300 focus:border-blue-500 py-2 outline-none mb-6">
+                        <div class="relative">
+                             <input id="loginPassword" type="password" placeholder="Enter Password" class="w-full border-b-2 border-gray-300 focus:border-blue-500 py-2 outline-none">
+                             <a href="#" class="absolute right-0 top-2 text-xs font-semibold text-blue-500">Forgot?</a>
+                        </div>
+                        <p class="text-xs text-gray-500 my-6">By continuing, you agree to Flipkart's <a href="#" class="text-blue-500">Terms of Use</a> and <a href="#" class="text-blue-500">Privacy Policy</a>.</p>
+                        <button id="loginSubmitBtn" class="w-full bg-orange-500 text-white font-semibold py-3 rounded-lg hover:bg-orange-600">Login</button>
+                        <p class="text-center text-gray-500 my-4">OR</p>
+                        <button class="w-full bg-white text-blue-500 font-semibold py-3 rounded-lg shadow-md border hover:bg-gray-50">Request OTP</button>
+                        <a href="#" id="showSignup" class="text-blue-500 font-semibold text-sm mt-auto text-center pt-4">New to Flipkart? Create an account</a>
+                    </div>
+                </div>
+             </div>
+        </div>
+        <!-- Signup View -->
+        <div id="signupView" class="hidden bg-white w-full max-w-md m-4 rounded-lg shadow-lg modal-container transform scale-95 opacity-0">
+             <div class="flex">
+                <div class="hidden sm:flex w-2/5 bg-blue-600 p-8 rounded-l-lg text-white flex-col justify-between">
+                    <div>
+                        <h2 class="text-2xl font-semibold">Looks like you're new here!</h2>
+                        <p class="text-sm mt-2">Sign up with your mobile number to get started</p>
+                    </div>
+                    <img src="https://static-assets-web.flixcart.com/fk-p-linchpin-web/fk-cp-zion/img/login_img_c4a81e.png" alt="Signup Graphic" class="w-32 h-32 mx-auto">
+                </div>
+                <div class="w-full sm:w-3/5 p-8 relative">
+                    <button class="closeModalBtn absolute top-4 right-4 text-gray-400 hover:text-gray-800">
+                        <i data-lucide="x" class="h-6 w-6"></i>
+                    </button>
+                    <div class="flex flex-col h-full">
+                        <input id="signupEmail" type="text" placeholder="Enter Email/Mobile number" class="w-full border-b-2 border-gray-300 focus:border-blue-500 py-2 outline-none mb-6">
+                        <input id="signupPassword" type="password" placeholder="Create a Password" class="w-full border-b-2 border-gray-300 focus:border-blue-500 py-2 outline-none mb-6">
+                        <p class="text-xs text-gray-500 my-6">By continuing, you agree to Flipkart's <a href="#" class="text-blue-500">Terms of Use</a> and <a href="#" class="text-blue-500">Privacy Policy</a>.</p>
+                        <button id="signupSubmitBtn" class="w-full bg-orange-500 text-white font-semibold py-3 rounded-lg hover:bg-orange-600">CONTINUE</button>
+                        <a href="#" id="showLogin" class="w-full mt-4 bg-white text-blue-500 font-semibold py-3 rounded-lg shadow-md border hover:bg-gray-50 text-center">Existing User? Log in</a>
+                    </div>
+                </div>
+             </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Data for categories and sub-categories
+            const productData = [
+                { name: 'iPhone 15', mainCategory: 'Electronics & Gadgets' },
+                { name: 'Samsung Galaxy S23 Ultra', mainCategory: 'Electronics & Gadgets' },
+                { name: 'Men\'s Casual Shirt', mainCategory: 'Fashion & Apparel' },
+                { name: 'Women\'s Kurti', mainCategory: 'Fashion & Apparel' },
+                { name: 'Sony Bravia 55 inch TV', mainCategory: 'Electronics & Gadgets' },
+                { name: 'Dell XPS 15 Laptop', mainCategory: 'Electronics & Gadgets' },
+                { name: 'Leather Sofa', mainCategory: 'Home & Living' },
+                { name: 'Face Wash', mainCategory: 'Beauty & Personal Care' },
+                { name: 'Whey Protein', mainCategory: 'Health & Fitness' },
+                { name: 'Cricket Bat', mainCategory: 'Sports & Outdoors' },
+                { name: 'LEGO Car', mainCategory: 'Toys & Baby Products' },
+                { name: 'Car Perfume', mainCategory: 'Automotive' },
+                { name: 'The Psychology of Money', mainCategory: 'Books, Media & Stationery' },
+                { name: 'Lays Potato Chips', mainCategory: 'Food & Beverages' },
+                { name: 'Coca-cola', mainCategory: 'Beverages' },
+                { name: 'American Tourister Suitcase', mainCategory: 'Travel & Luggage' },
+                { name: 'Dog Food', mainCategory: 'Pets' },
+                { name: 'Birthday Gift Card', mainCategory: 'Gifts & Occasions' },
+            ];
+
+            const categories = [
+                { 
+                    name: 'Fashion & Apparel', 
+                    img: 'images/fashionIco.jpeg',
+                    subcategories: [
+                         { title: 'Men', items: ['Suits', 'Shirts', 'Jeans', 'Trousers', 'Shorts'] },
+                         { title: 'Women', items: ['Sarees', 'Kurtis', 'Dresses', 'Tops', 'Skirts'] },
+                         { title: 'Kids', items: ['School Uniforms', 'T-shirts', 'Dresses'] },
+                         { title: 'Footwear', items: ['Casual', 'Formal', 'Sports', 'Sandals'] },
+                         { title: 'Accessories', items: ['Bags', 'Belts', 'Sunglasses', 'Wallets'] },
+                         { title: 'Jewellery', items: ['Necklaces', 'Earrings', 'Bracelets', 'Rings'] },
+                         { title: 'Watches', items: ['Analog', 'Digital', 'Smartwatches'] },
+                    ]
+                },
+                { 
+                    name: 'Electronics & Gadgets', 
+                    img: 'images/electronicsIco.jpeg',
+                    subcategories: [ 
+                        { title: 'Mobiles', items: ['Smartphones', 'Chargers', 'Cases'] },
+                        { title: 'Computers', items: ['Laptops', 'Desktops', 'Monitors', 'Peripherals'] },
+                        { title: 'Appliances', items: ['Refrigerators', 'Washing Machines', 'Air Conditioners'] },
+                        { title: 'Personal Care Electronics', items: ['Trimmers', 'Hair Dryers', 'Shavers'] },
+                        { title: 'Audio & Wearables', items: ['Headphones', 'Earbuds', 'Smart Bands'] },
+                        { title: 'Cameras', items: ['DSLRs', 'Lenses', 'Tripods'] },
+                    ] 
+                },
+                { 
+                    name: 'Home & Living', 
+                    img: 'images/livingIco.jpeg',
+                    subcategories: [ 
+                        { title: 'Furniture', items: ['Sofas', 'Beds', 'Dining Tables', 'Chairs'] },
+                        { title: 'Bedding', items: ['Bedsheets', 'Pillows', 'Blankets', 'Mattresses'] },
+                        { title: 'Decor', items: ['Wall Art', 'Vases', 'Clocks', 'Photo Frames'] },
+                        { title: 'Lighting', items: ['Lamps', 'Ceiling Lights', 'LED Bulbs', 'String Lights'] },
+                        { title: 'Storage Solutions', items: ['Cabinets', 'Shelves', 'Boxes', 'Wardrobes'] },
+                    ]
+                },
+                { 
+                    name: 'Beauty & Personal Care', 
+                    img: 'images/beautyIco.jpeg',
+                    subcategories: [ 
+                        { title: 'Skincare', items: []},
+                        { title: 'Haircare', items: []},
+                        { title: 'Makeup', items: []},
+                        { title: 'Fragrances', items: []},
+                        { title: 'Men\'s Grooming', items: []},
+                    ] 
+                },
+                { 
+                    name: 'Health & Fitness', 
+                    img: 'images/healthIco.jpeg',
+                    subcategories: [
+                        { title: 'Supplements', items: [] },
+                        { title: 'Fitness Equipment', items: [] },
+                        { title: 'Yoga Mats', items: [] },
+                        { title: 'Personal Care Devices', items: [] },
+                        { title: 'First Aid', items: [] },
+                    ] 
+                },
+                { 
+                    name: 'Sports & Outdoors', 
+                    img: 'images/sportsIco.jpeg',
+                    subcategories: [
+                        { title: 'Cricket', items: [] },
+                        { title: 'Football', items: [] },
+                        { title: 'Tennis Gear', items: [] },
+                        { title: 'Camping Equipment', items: [] },
+                        { title: 'Bicycles', items: [] },
+                        { title: 'Outdoor Gear', items: [] },
+                    ] 
+                },
+                { 
+                    name: 'Toys & Baby Products', 
+                    img: 'images/toyIco.jpeg',
+                    subcategories: [
+                        { title: 'Toys', items: [] },
+                        { title: 'Baby Care', items: ['Diapers', 'Wipes', 'Creams'] },
+                        { title: 'Feeding Products', items: [] },
+                        { title: 'Safety Products', items: [] },
+                    ] 
+                },
+                { 
+                    name: 'Automotive', 
+                    img: 'images/autoIco.jpeg',
+                    subcategories: [
+                        { title: 'Cars', items: ['SUVs', 'Sedans', 'EVs'] },
+                        { title: 'Motorcycles', items: [] },
+                        { title: 'Car Accessories', items: [] },
+                        { title: 'Bike Accessories', items: [] },
+                        { title: 'Tools & Maintenance', items: [] },
+                    ] 
+                },
+                { 
+                    name: 'Books, Media & Stationery', 
+                    img: 'images/stationaryIco.jpeg',
+                    subcategories: [
+                        { title: 'Books', items: ['Fiction', 'Non-Fiction', 'Educational'] },
+                        { title: 'Stationery', items: [] },
+                        { title: 'Office Supplies', items: [] },
+                        { title: 'Art Supplies', items: [] },
+                        { title: 'Media Discs', items: [] },
+                    ] 
+                },
+                 { 
+                    name: 'Food & Beverages', 
+                    img: 'images/foodIco.jpeg',
+                    subcategories: [
+                        { title: 'Groceries', items: ['Rice', 'Pulses', 'Spices', 'Oils'] },
+                        { title: 'Snacks', items: [] },
+                        { title: 'Sweets', items: [] },
+                        { title: 'Chocolates', items: [] },
+                        { title: 'Health Foods', items: [] },
+                    ] 
+                },
+                { 
+                    name: 'Beverages', 
+                    img: 'images/bevarageIco.jpeg',
+                    subcategories: [
+                        { title: 'Tea', items: [] },
+                        { title: 'Coffee', items: [] },
+                        { title: 'Herbal Teas', items: [] },
+                        { title: 'Alcohol', items: ['Beer', 'Wine', 'Whiskey', 'Rum'] },
+                        { title: 'Soft Drinks', items: [] },
+                        { title: 'Packaged Water', items: [] },
+                    ] 
+                },
+                { 
+                    name: 'Travel & Luggage', 
+                    img: 'images/travelIco.jpeg',
+                    subcategories: [
+                        { title: 'Luggage', items: [] },
+                        { title: 'Duffel Bags', items: [] },
+                        { title: 'Travel Accessories', items: [] },
+                        { title: 'Camping Gear', items: [] },
+                    ] 
+                },
+                { 
+                    name: 'Pets', 
+                    img: 'images/petIco.jpeg',
+                    subcategories: [
+                        { title: 'Food', items: [] },
+                        { title: 'Treats', items: [] },
+                        { title: 'Accessories', items: [] },
+                        { title: 'Toys', items: [] },
+                        { title: 'Grooming', items: [] },
+                    ] 
+                },
+                { 
+                    name: 'Gifts & Occasions', 
+                    img: 'images/giftIco.jpeg',
+                    subcategories: [
+                        { title: 'Personalised Gifts', items: [] },
+                        { title: 'Hampers', items: [] },
+                        { title: 'Festival Items', items: [] },
+                        { title: 'Wrapping & Greeting Cards', items: [] },
+                    ] 
+                },
+            ];
+
+            const categoryGridContainer = document.getElementById('category-grid-container');
+
+            function renderCategories() {
+                if (!categoryGridContainer) return;
+                categoryGridContainer.innerHTML = ''; // Clear existing categories
+                
+                categories.forEach(cat => {
+                    const catElement = document.createElement('a');
+                    catElement.href = "#";
+                    catElement.className = 'category-item flex flex-col items-center p-2 rounded-lg hover:bg-gray-100 group'; 
+                    catElement.innerHTML = `
+                        <img src="${cat.img}" class="w-16 h-16 rounded-full object-cover mb-2 group-hover:scale-110 transition-transform duration-300">
+                        <p class="text-xs font-semibold text-center text-gray-700">${cat.name}</p>
+                    `;
+                    
+                    catElement.addEventListener('click', (e) => {
+                         e.preventDefault();
+
+                        if (cat.name === 'Fashion & Apparel') {
+                            renderDynamicPage(cat, 'fashionSubCategoryGrid');
+                            showView('fashionView');
+                        } else if (cat.name === 'Electronics & Gadgets') {
+                            renderDynamicPage(cat, 'electronicsSubCategoryGrid');
+                            showView('electronicsView');
+                        } else if (cat.name === 'Home & Living') {
+                            renderDynamicPage(cat, 'homeLivingSubCategoryGrid');
+                            showView('homeLivingView');
+                        } else if (cat.name === 'Beauty & Personal Care') {
+                            renderDynamicPage(cat, 'beautySubCategoryGrid');
+                            showView('beautyView');
+                        } else if (cat.name === 'Health & Fitness') {
+                            renderDynamicPage(cat, 'healthFitnessSubCategoryGrid');
+                            showView('healthFitnessView');
+                        } else if (cat.name === 'Sports & Outdoors') {
+                            renderDynamicPage(cat, 'sportsOutdoorsSubCategoryGrid');
+                            showView('sportsOutdoorsView');
+                        } else if (cat.name === 'Toys & Baby Products') {
+                            renderDynamicPage(cat, 'toysBabyProductsSubCategoryGrid');
+                            showView('toysBabyProductsView');
+                        } else if (cat.name === 'Automotive') {
+                             renderDynamicPage(cat, 'automotiveSubCategoryGrid');
+                            showView('automotiveView');
+                        } else if (cat.name === 'Books, Media & Stationery') {
+                             renderDynamicPage(cat, 'booksMediaStationerySubCategoryGrid');
+                            showView('booksMediaStationeryView');
+                        } else if (cat.name === 'Food & Beverages') {
+                            renderDynamicPage(cat, 'foodBeveragesSubCategoryGrid');
+                            showView('foodBeveragesView');
+                        } else if (cat.name === 'Beverages') {
+                            renderDynamicPage(cat, 'beveragesSubCategoryGrid');
+                            showView('beveragesView');
+                        } else if (cat.name === 'Travel & Luggage') {
+                            renderDynamicPage(cat, 'travelLuggageSubCategoryGrid');
+                            showView('travelLuggageView');
+                        } else if (cat.name === 'Pets') {
+                            renderDynamicPage(cat, 'petsSubCategoryGrid');
+                            showView('petsView');
+                        } else if (cat.name === 'Gifts & Occasions') {
+                            renderDynamicPage(cat, 'giftsOccasionsSubCategoryGrid');
+                            showView('giftsOccasionsView');
+                        } else if (cat.subcategories.length > 0) {
+                            renderDynamicPage(cat, 'subCategoryGrid'); 
+                            showView('categoryView');
+                        } else {
+                           showView('homeView');
+                        }
+                    });
+                    categoryGridContainer.appendChild(catElement);
+                });
+            }
+
+            // Carousel functionality
+            const slides = document.querySelectorAll('.carousel-slide');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            let currentSlide = 0;
+            const slideInterval = 5000;
+            let autoPlay;
+
+            function showSlide(index) { slides.forEach((slide, i) => { slide.style.opacity = i === index ? '1' : '0'; }); }
+            function nextSlide() { currentSlide = (currentSlide + 1) % slides.length; showSlide(currentSlide); }
+            function startAutoPlay() { autoPlay = setInterval(nextSlide, slideInterval); }
+            if (slides.length > 0) {
+                nextBtn.addEventListener('click', nextSlide);
+                prevBtn.addEventListener('click', () => { currentSlide = (currentSlide - 1 + slides.length) % slides.length; showSlide(currentSlide); });
+                startAutoPlay();
+                showSlide(currentSlide);
+            }
+            
+            // --- AUTH LOGIC & UI ELEMENTS ---
+            const loginBtn = document.getElementById('loginBtn');
+            const authModal = document.getElementById('authModal');
+            
+            const closeModalBtns = document.querySelectorAll('.closeModalBtn');
+            const loginView = document.getElementById('loginView');
+            const signupView = document.getElementById('signupView');
+            const showSignupBtn = document.getElementById('showSignup');
+            const showLoginBtn = document.getElementById('showLogin');
+            const loginSubmitBtn = document.getElementById('loginSubmitBtn');
+            const signupSubmitBtn = document.getElementById('signupSubmitBtn');
+            const loginContainer = document.getElementById('login-container');
+            const userContainer = document.getElementById('user-container');
+            const userBtn = document.getElementById('userBtn');
+            const userDropdown = document.getElementById('userDropdown');
+            const logoutBtn = document.getElementById('logoutBtn');
+            const usernameSpan = document.getElementById('username');
+            const profileEmailSpan = document.getElementById('profileEmail');
+            const profileMobileSpan = document.getElementById('profileMobile');
+            const firstNameInput = document.getElementById('firstNameInput');
+            const lastNameInput = document.getElementById('lastNameInput');
+            const profileForm = document.getElementById('profileForm');
+            const mobileDisplay = document.getElementById('mobileDisplay');
+            const mobileEdit = document.getElementById('mobileEdit');
+            const updateMobileBtn = document.getElementById('updateMobileBtn');
+            const saveMobileBtn = document.getElementById('saveMobileBtn');
+            const cancelMobileBtn = document.getElementById('cancelMobileBtn');
+            const mobileInput = document.getElementById('mobileInput');
+            const maleIconBtn = document.getElementById('maleIconBtn');
+            const femaleIconBtn = document.getElementById('femaleIconBtn');
+            const maleCheck = document.getElementById('maleCheck');
+            const femaleCheck = document.getElementById('femaleCheck');
+            let selectedGender = null;
+
+
+            // --- VIEW MANAGEMENT ---
+            const homeView = document.getElementById('homeView');
+            const fashionView = document.getElementById('fashionView');
+            const electronicsView = document.getElementById('electronicsView');
+            const homeLivingView = document.getElementById('homeLivingView');
+            const beautyView = document.getElementById('beautyView');
+            const healthFitnessView = document.getElementById('healthFitnessView');
+            const sportsOutdoorsView = document.getElementById('sportsOutdoorsView');
+            const toysBabyProductsView = document.getElementById('toysBabyProductsView');
+            const automotiveView = document.getElementById('automotiveView');
+            const booksMediaStationeryView = document.getElementById('booksMediaStationeryView');
+            const foodBeveragesView = document.getElementById('foodBeveragesView');
+            const beveragesView = document.getElementById('beveragesView');
+            const travelLuggageView = document.getElementById('travelLuggageView');
+            const petsView = document.getElementById('petsView');
+            const giftsOccasionsView = document.getElementById('giftsOccasionsView');
+            const mobileView = document.getElementById('mobileView');
+            const categoryView = document.getElementById('categoryView');
+            const profileView = document.getElementById('profileView');
+            const ordersView = document.getElementById('ordersView');
+            const wishlistView = document.getElementById('wishlistView');
+            const servicesView = document.getElementById('servicesView');
+            const schemeView = document.getElementById('schemeView');
+            const mainViews = [homeView, fashionView, electronicsView, homeLivingView, beautyView, healthFitnessView, sportsOutdoorsView, toysBabyProductsView, automotiveView, booksMediaStationeryView, foodBeveragesView, beveragesView, travelLuggageView, petsView, giftsOccasionsView, mobileView, categoryView, profileView, ordersView, wishlistView, servicesView, schemeView];
+            const profileLink = document.getElementById('profileLink');
+            const ordersLink = document.getElementById('ordersLink');
+            const wishlistLink = document.getElementById('wishlistLink');
+            const logoLink = document.getElementById('logoLink');
+            const backToHomeBtns = document.querySelectorAll('.backToHomeBtn');
+            const servicesLinkHeader = document.getElementById('servicesLinkHeader');
+            const schemeLinkHeader = document.getElementById('schemeLinkHeader');
+
+
+            function showView(viewToShow) {
+                mainViews.forEach(view => {
+                    if (view) {
+                        view.id === viewToShow ? view.classList.remove('hidden') : view.classList.add('hidden');
+                    }
+                });
+                if (userDropdown) userDropdown.classList.add('hidden');
+                window.scrollTo(0, 0);
+            }
+            
+            function renderDynamicPage(category, gridId) {
+                const grid = document.getElementById(gridId);
+                if(!grid) return;
+                grid.innerHTML = ''; // Clear previous content
+
+                if (category.subcategories.length > 0) {
+                    category.subcategories.forEach(sub => {
+                        const subCatElement = document.createElement('div');
+                        subCatElement.innerHTML = `
+                            <h3 class="font-bold text-lg text-gray-800 mb-3">${sub.title}</h3>
+                            <ul class="space-y-2">
+                                ${sub.items.map(item => `<li><a href="#" class="text-gray-600 hover:text-blue-500">${item}</a></li>`).join('')}
+                            </ul>
+                        `;
+                        grid.appendChild(subCatElement);
+                    });
+                }
+            }
+            
+            if (profileLink) profileLink.addEventListener('click', (e) => { e.preventDefault(); showView('profileView'); });
+            if (ordersLink) ordersLink.addEventListener('click', (e) => { e.preventDefault(); showView('ordersView'); });
+            if (wishlistLink) wishlistLink.addEventListener('click', (e) => { e.preventDefault(); showView('wishlistView'); });
+            
+            const resetToHome = (e) => {
+                if(e) e.preventDefault();
+                showView('homeView');
+            };
+
+            if (logoLink) logoLink.addEventListener('click', resetToHome);
+            if(servicesLinkHeader) servicesLinkHeader.addEventListener('click', (e) => { e.preventDefault(); showView('servicesView'); });
+            if(schemeLinkHeader) schemeLinkHeader.addEventListener('click', (e) => { e.preventDefault(); showView('schemeView'); });
+            backToHomeBtns.forEach(btn => btn.addEventListener('click', resetToHome));
+
+            renderCategories();
+
+            // --- MODAL CONTROLS ---
+            function openModal(modal, view) {
+                modal.classList.remove('opacity-0', 'pointer-events-none');
+                
+                if (modal === authModal) {
+                     if (view === 'login') {
+                        signupView.classList.add('hidden');
+                        loginView.classList.remove('hidden');
+                        loginView.classList.remove('scale-95', 'opacity-0');
+                        signupView.classList.add('scale-95', 'opacity-0');
+                    } else { // 'signup'
+                        loginView.classList.add('hidden');
+                        signupView.classList.remove('hidden');
+                        signupView.classList.remove('scale-95', 'opacity-0');
+                        loginView.classList.add('scale-95', 'opacity-0');
+                    }
+                }
+            }
+
+            function closeModal(modal) {
+                modal.classList.add('opacity-0', 'pointer-events-none');
+                modal.querySelectorAll('.modal-container').forEach(container => {
+                    container.classList.add('scale-95', 'opacity-0');
+                });
+            }
+            
+            loginBtn.addEventListener('click', () => openModal(authModal, 'login'));
+            closeModalBtns.forEach(btn => btn.addEventListener('click', (e) => {
+                const modal = e.target.closest('.modal-overlay');
+                if (modal) closeModal(modal);
+            }));
+            
+            authModal.addEventListener('click', (e) => { if(e.target === authModal) closeModal(authModal); });
+            
+            showSignupBtn.addEventListener('click', (e) => { e.preventDefault(); openModal(authModal, 'signup'); });
+            showLoginBtn.addEventListener('click', (e) => { e.preventDefault(); openModal(authModal, 'login'); });
+
+            // --- UI UPDATE FUNCTIONS ---
+            function updateUIToLoggedIn(email) {
+                let users = JSON.parse(localStorage.getItem('flipkart_users')) || [];
+                const currentUser = users.find(u => u.email === email);
+                if (!currentUser) return;
+
+                loginContainer.classList.add('hidden');
+                userContainer.classList.remove('hidden');
+                usernameSpan.textContent = currentUser.firstName || email.split('@')[0];
+                
+                if(profileEmailSpan) profileEmailSpan.textContent = currentUser.email;
+                if(profileMobileSpan) profileMobileSpan.textContent = currentUser.mobile || '+91 XXXXX XXXXX';
+                if(firstNameInput) firstNameInput.value = currentUser.firstName || '';
+                if(lastNameInput) lastNameInput.value = currentUser.lastName || '';
+                if(currentUser.gender) selectGender(currentUser.gender);
+            }
+
+            function updateUIToLoggedOut() {
+                 userContainer.classList.add('hidden');
+                loginContainer.classList.remove('hidden');
+            }
+            
+            // --- LOCAL STORAGE & AUTHENTICATION ---
+            const loggedInUser = localStorage.getItem('flipkart_currentUser');
+            if(loggedInUser) {
+                updateUIToLoggedIn(loggedInUser);
+            }
+
+            signupSubmitBtn.addEventListener('click', () => {
+                const email = document.getElementById('signupEmail').value;
+                const password = document.getElementById('signupPassword').value;
+                if(!email || !password) {
+                    alert('Please fill in all fields.');
+                    return;
+                }
+                let users = JSON.parse(localStorage.getItem('flipkart_users')) || [];
+                if(users.find(user => user.email === email)) {
+                    alert('An account with this email already exists.');
+                    return;
+                }
+                
+                const newUser = {
+                    email,
+                    password,
+                    firstName: email.split('@')[0], // Prefill first name
+                    lastName: '',
+                    mobile: '+91 98765 43210', // Placeholder
+                    gender: null
+                };
+                
+                users.push(newUser);
+                localStorage.setItem('flipkart_users', JSON.stringify(users));
+                
+                // Switch to login view
+                alert('Account created successfully! Please log in.');
+                document.getElementById('loginEmail').value = email;
+                openModal(authModal, 'login');
+            });
+            
+            loginSubmitBtn.addEventListener('click', () => {
+                const email = document.getElementById('loginEmail').value;
+                const password = document.getElementById('loginPassword').value;
+                if(!email || !password) { alert('Please fill in all fields.'); return; }
+                let users = JSON.parse(localStorage.getItem('flipkart_users')) || [];
+                const user = users.find(u => u.email === email && u.password === password);
+                if(user) {
+                    localStorage.setItem('flipkart_currentUser', user.email);
+                    updateUIToLoggedIn(user.email);
+                    closeModal(authModal);
+                } else {
+                     alert('Invalid email or password.');
+                }
+            });
+
+            if (profileForm) {
+                profileForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const loggedInEmail = localStorage.getItem('flipkart_currentUser');
+                    if(!loggedInEmail) { alert('You are not logged in!'); return; }
+                    
+                    let users = JSON.parse(localStorage.getItem('flipkart_users')) || [];
+                    const userIndex = users.findIndex(u => u.email === loggedInEmail);
+
+                    if (userIndex !== -1) {
+                        users[userIndex].firstName = firstNameInput.value;
+                        users[userIndex].lastName = lastNameInput.value;
+                        users[userIndex].gender = selectedGender;
+                        localStorage.setItem('flipkart_users', JSON.stringify(users));
+                        alert('Profile updated successfully!');
+                        usernameSpan.textContent = users[userIndex].firstName || loggedInEmail.split('@')[0];
+                    }
+                });
+            }
+            
+            logoutBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                localStorage.removeItem('flipkart_currentUser');
+                updateUIToLoggedOut();
+                showView('homeView');
+            });
+
+             // --- PROFILE EDITING ---
+            function selectGender(gender) {
+                selectedGender = gender;
+                if (gender === 'male') {
+                    maleCheck.classList.remove('hidden');
+                    femaleCheck.classList.add('hidden');
+                } else if (gender === 'female') {
+                    femaleCheck.classList.remove('hidden');
+                    maleCheck.classList.add('hidden');
+                }
+            }
+            if(maleIconBtn) maleIconBtn.addEventListener('click', () => selectGender('male'));
+            if(femaleIconBtn) femaleIconBtn.addEventListener('click', () => selectGender('female'));
+            
+             if (updateMobileBtn) {
+                updateMobileBtn.addEventListener('click', () => {
+                    mobileDisplay.classList.add('hidden');
+                    mobileEdit.classList.remove('hidden');
+                    const loggedInEmail = localStorage.getItem('flipkart_currentUser');
+                    let users = JSON.parse(localStorage.getItem('flipkart_users')) || [];
+                    const currentUser = users.find(u => u.email === loggedInEmail);
+                    if(currentUser) {
+                        mobileInput.value = currentUser.mobile || '';
+                    }
+                });
+            }
+
+            if (cancelMobileBtn) {
+                cancelMobileBtn.addEventListener('click', () => {
+                    mobileEdit.classList.add('hidden');
+                    mobileDisplay.classList.remove('hidden');
+                });
+            }
+            
+            if (saveMobileBtn) {
+                saveMobileBtn.addEventListener('click', () => {
+                    const newMobile = mobileInput.value;
+                    const loggedInEmail = localStorage.getItem('flipkart_currentUser');
+                    if (!loggedInEmail) { alert('You are not logged in!'); return; }
+                    
+                    let users = JSON.parse(localStorage.getItem('flipkart_users')) || [];
+                    const userIndex = users.findIndex(u => u.email === loggedInEmail);
+
+                    if (userIndex !== -1) {
+                        users[userIndex].mobile = newMobile;
+                        localStorage.setItem('flipkart_users', JSON.stringify(users));
+                        alert('Mobile number updated successfully!');
+                        profileMobileSpan.textContent = newMobile;
+                        mobileEdit.classList.add('hidden');
+                        mobileDisplay.classList.remove('hidden');
+                    }
+                });
+            }
+            
+            // --- DROPDOWN HANDLERS ---
+            userBtn.addEventListener('click', () => userDropdown.classList.toggle('hidden'));
+            document.addEventListener('click', (e) => {
+                if (userContainer && !userContainer.contains(e.target)) {
+                    if (userDropdown) userDropdown.classList.add('hidden');
+                }
+            });
+
+            const moreBtn = document.getElementById('moreBtn');
+            const moreDropdown = document.getElementById('moreDropdown');
+            if (moreBtn) {
+                moreBtn.addEventListener('click', () => moreDropdown.classList.toggle('hidden'));
+                document.addEventListener('click', (e) => {
+                    if (moreBtn && !moreBtn.parentElement.contains(e.target)) {
+                        if (moreDropdown) moreDropdown.classList.add('hidden');
+                    }
+                });
+            }
+
+            // --- SEARCH FUNCTIONALITY ---
+            const searchInput = document.getElementById('searchInput');
+            const searchResults = document.getElementById('searchResults');
+            const searchInputMobile = document.getElementById('searchInputMobile');
+            const searchResultsMobile = document.getElementById('searchResultsMobile');
+
+            function handleSearch(query, resultsContainer) {
+                if (query.length < 2) {
+                    resultsContainer.innerHTML = '';
+                    resultsContainer.classList.add('hidden');
+                    return;
+                }
+
+                const filteredProducts = productData.filter(product =>
+                    product.name.toLowerCase().includes(query.toLowerCase())
+                );
+
+                if (filteredProducts.length > 0) {
+                    const resultsHtml = filteredProducts.map(product => `
+                    <a href="#" class="search-result-item flex items-center p-3 hover:bg-gray-100 border-b last:border-b-0" data-product-name="${product.name}" data-main-category="${product.mainCategory}">
+                        <i data-lucide="search" class="h-4 w-4 mr-3 text-gray-400"></i>
+                        <span>${product.name}</span>
+                    </a>
+                    `).join('');
+                    resultsContainer.innerHTML = resultsHtml;
+                    resultsContainer.classList.remove('hidden');
+                    lucide.createIcons();
+                } else {
+                    resultsContainer.innerHTML = '<p class="p-3 text-gray-500">No results found.</p>';
+                    resultsContainer.classList.remove('hidden');
+                }
+            }
+
+            function handleResultClick(e) {
+                e.preventDefault();
+                const target = e.target.closest('.search-result-item');
+                if (!target) return;
+
+                const productName = target.dataset.productName;
+                const mainCategoryName = target.dataset.mainCategory;
+
+                const categoryData = categories.find(c => c.name === mainCategoryName);
+
+                if (categoryData) {
+                    const viewId = mainCategoryName.toLowerCase().replace(/ & /g, '').replace(/, /g, '').replace(/ /g, '') + 'View';
+                    const gridId = mainCategoryName.toLowerCase().replace(/ & /g, '').replace(/, /g, '') + 'SubCategoryGrid';
+                    
+                    if (document.getElementById(viewId)) {
+                        renderDynamicPage(categoryData, gridId);
+                        showView(viewId);
+                    } else {
+                        renderDynamicPage(categoryData, 'subCategoryGrid');
+                        showView('categoryView');
+                    }
+                }
+
+                searchInput.value = productName;
+                if(searchInputMobile) searchInputMobile.value = productName;
+                searchResults.classList.add('hidden');
+                if(searchResultsMobile) searchResultsMobile.classList.add('hidden');
+            }
+            
+            searchInput.addEventListener('input', () => handleSearch(searchInput.value, searchResults));
+            searchInputMobile.addEventListener('input', () => handleSearch(searchInputMobile.value, searchResultsMobile));
+            searchResults.addEventListener('click', handleResultClick);
+            searchResultsMobile.addEventListener('click', handleResultClick);
+
+            document.addEventListener('click', (e) => {
+                if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+                    searchResults.classList.add('hidden');
+                }
+                 if (!searchInputMobile.contains(e.target) && !searchResultsMobile.contains(e.target)) {
+                    searchResultsMobile.classList.add('hidden');
+                }
+            });
+
+
+            // Render Lucide Icons
+            lucide.createIcons();
+        });
+    </script>
+</body>
+</html>
+
